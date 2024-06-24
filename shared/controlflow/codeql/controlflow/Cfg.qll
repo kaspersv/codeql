@@ -914,6 +914,7 @@ module Make<LocationSig Location, InputSig<Location> Input> {
 
     /** Gets a successor node of a given flow type, if any. */
     cached
+    pragma[no_dynamic_join_order]
     Node getASuccessor(Node pred, SuccessorType t) {
       // Callable entry node -> callable body
       exists(AstNode succElement, Splits succSplits, CfgScope scope |
