@@ -84,6 +84,7 @@ module ApiGraphShared<ApiGraphSharedSig S> {
      * That relation is reflexive, so `fastTC` produces the equivalent of a reflexive, transitive closure.
      */
     pragma[noopt]
+    pragma[no_dynamic_join_order]
     cached
     predicate epsilonEdge(ApiNode pred, ApiNode succ) {
       exists(
