@@ -1356,6 +1356,7 @@ class BinaryExpr extends @binaryexpr, Expr {
    * This predicate is only defined if both operands are on the same line, and if the
    * amount of whitespace before and after the operator are the same.
    */
+  pragma[no_dynamic_join_order]
   int getWhitespaceAroundOperator() {
     exists(Token lastLeft, Token operator, Token firstRight, int l, int c1, int c2, int c3, int c4 |
       lastLeft = this.getLeftOperand().getLastToken() and
