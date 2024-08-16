@@ -16,6 +16,7 @@ import go
 import semmle.go.security.ReflectedXss
 import ReflectedXss::Flow::PathGraph
 
+pragma[no_dynamic_join_order]
 from
   ReflectedXss::Flow::PathNode source, ReflectedXss::Flow::PathNode sink, string msg, string part,
   Locatable partloc

@@ -105,6 +105,7 @@ predicate returnUncheckedAtNode(
   )
 }
 
+pragma[no_dynamic_join_order]
 from
   DataFlow::CallNode call, DataFlow::SsaNode ptr, DataFlow::SsaNode err,
   DataFlow::PointerDereferenceNode deref, ControlFlow::Node derefNode
