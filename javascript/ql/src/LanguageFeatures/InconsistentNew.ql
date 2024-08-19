@@ -93,6 +93,7 @@ DataFlow::InvokeNode getFirstInvocation(Function f, boolean isNew) {
     )
 }
 
+pragma[no_dynamic_join_order]
 from Function f, DataFlow::NewNode new, DataFlow::CallNode call
 where
   new = getFirstInvocation(f, true) and

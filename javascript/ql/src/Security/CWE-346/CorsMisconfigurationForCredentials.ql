@@ -16,6 +16,7 @@ import javascript
 import semmle.javascript.security.dataflow.CorsMisconfigurationForCredentialsQuery
 import DataFlow::PathGraph
 
+pragma[no_dynamic_join_order]
 from Configuration cfg, DataFlow::PathNode source, DataFlow::PathNode sink
 where cfg.hasFlowPath(source, sink)
 select sink.getNode(), source, sink, "$@ leak vulnerability due to a $@.",

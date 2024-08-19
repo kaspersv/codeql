@@ -15,6 +15,7 @@ import javascript
 import semmle.javascript.security.dataflow.HttpToFileAccessQuery
 import DataFlow::PathGraph
 
+pragma[no_dynamic_join_order]
 from Configuration cfg, DataFlow::PathNode source, DataFlow::PathNode sink
 where cfg.hasFlowPath(source, sink)
 select sink.getNode(), source, sink, "Write to file system depends on $@.", source.getNode(),

@@ -18,6 +18,7 @@ import semmle.javascript.security.dataflow.SqlInjectionQuery as SqlInjection
 import semmle.javascript.security.dataflow.NosqlInjectionQuery as NosqlInjection
 import DataFlow::PathGraph
 
+pragma[no_dynamic_join_order]
 from DataFlow::Configuration cfg, DataFlow::PathNode source, DataFlow::PathNode sink, string type
 where
   (

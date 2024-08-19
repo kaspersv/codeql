@@ -16,6 +16,7 @@ import javascript
 import semmle.javascript.security.dataflow.DomBasedXssQuery
 import DataFlow::PathGraph
 
+pragma[no_dynamic_join_order]
 from DataFlow::Configuration cfg, DataFlow::PathNode source, DataFlow::PathNode sink
 where cfg.hasFlowPath(source, sink)
 select sink.getNode(), source, sink,

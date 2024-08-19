@@ -103,6 +103,7 @@ predicate isAssertion(RegExpTerm t) {
   t instanceof RegExpNonWordBoundary
 }
 
+pragma[no_dynamic_join_order]
 from RegExpTerm term, RegExpQuery call, string message
 where
   term.isNullable() and

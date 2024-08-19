@@ -151,6 +151,7 @@ predicate hasNonVoidReturnType(Function f) {
   exists(TypeAnnotation type | type = f.getReturnTypeAnnotation() | not type.isVoid())
 }
 
+pragma[no_dynamic_join_order]
 from DataFlow::CallNode call, Function func, string name, string msg
 where
   (

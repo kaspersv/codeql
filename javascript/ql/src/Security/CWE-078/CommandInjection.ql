@@ -17,6 +17,7 @@ import javascript
 import semmle.javascript.security.dataflow.CommandInjectionQuery
 import DataFlow::PathGraph
 
+pragma[no_dynamic_join_order]
 from
   Configuration cfg, DataFlow::PathNode source, DataFlow::PathNode sink, DataFlow::Node highlight,
   Source sourceNode

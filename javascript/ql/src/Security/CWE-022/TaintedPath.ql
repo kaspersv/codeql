@@ -19,6 +19,7 @@ import javascript
 import semmle.javascript.security.dataflow.TaintedPathQuery
 import DataFlow::PathGraph
 
+pragma[no_dynamic_join_order]
 from Configuration cfg, DataFlow::PathNode source, DataFlow::PathNode sink
 where cfg.hasFlowPath(source, sink)
 select sink.getNode(), source, sink, "This path depends on a $@.", source.getNode(),

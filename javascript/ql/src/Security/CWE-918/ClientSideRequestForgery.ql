@@ -15,6 +15,7 @@ import javascript
 import semmle.javascript.security.dataflow.ClientSideRequestForgeryQuery
 import DataFlow::PathGraph
 
+pragma[no_dynamic_join_order]
 from Configuration cfg, DataFlow::PathNode source, DataFlow::PathNode sink, DataFlow::Node request
 where
   cfg.hasFlowPath(source, sink) and

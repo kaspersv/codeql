@@ -16,6 +16,7 @@ import semmle.javascript.security.dataflow.BrokenCryptoAlgorithmQuery
 import semmle.javascript.security.SensitiveActions
 import DataFlow::PathGraph
 
+pragma[no_dynamic_join_order]
 from
   Configuration cfg, DataFlow::PathNode source, DataFlow::PathNode sink, Source sourceNode,
   Sink sinkNode

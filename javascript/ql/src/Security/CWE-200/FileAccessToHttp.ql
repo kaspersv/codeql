@@ -14,6 +14,7 @@ import javascript
 import semmle.javascript.security.dataflow.FileAccessToHttpQuery
 import DataFlow::PathGraph
 
+pragma[no_dynamic_join_order]
 from Configuration cfg, DataFlow::PathNode source, DataFlow::PathNode sink
 where cfg.hasFlowPath(source, sink)
 select sink.getNode(), source, sink, "Outbound network request depends on $@.", source.getNode(),

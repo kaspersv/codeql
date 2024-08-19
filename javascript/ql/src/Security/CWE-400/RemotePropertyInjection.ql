@@ -16,6 +16,7 @@ import javascript
 import semmle.javascript.security.dataflow.RemotePropertyInjectionQuery
 import DataFlow::PathGraph
 
+pragma[no_dynamic_join_order]
 from Configuration cfg, DataFlow::PathNode source, DataFlow::PathNode sink
 where cfg.hasFlowPath(source, sink)
 select sink.getNode(), source, sink, sink.getNode().(Sink).getMessage() + " depends on a $@.",

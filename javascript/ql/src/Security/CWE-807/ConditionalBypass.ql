@@ -15,6 +15,7 @@ import javascript
 import semmle.javascript.security.dataflow.ConditionalBypassQuery
 import DataFlow::PathGraph
 
+pragma[no_dynamic_join_order]
 from DataFlow::PathNode source, DataFlow::PathNode sink, SensitiveAction action
 where
   isTaintedGuardForSensitiveAction(sink, source, action) and

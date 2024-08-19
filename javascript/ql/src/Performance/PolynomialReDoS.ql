@@ -17,6 +17,7 @@ import javascript
 import semmle.javascript.security.regexp.PolynomialReDoSQuery
 import DataFlow::PathGraph
 
+pragma[no_dynamic_join_order]
 from
   Configuration cfg, DataFlow::PathNode source, DataFlow::PathNode sink, Sink sinkNode,
   PolynomialBackTrackingTerm regexp

@@ -15,6 +15,7 @@ import javascript
 import DataFlow::PathGraph
 import semmle.javascript.security.dataflow.LogInjectionQuery
 
+pragma[no_dynamic_join_order]
 from LogInjectionConfiguration config, DataFlow::PathNode source, DataFlow::PathNode sink
 where config.hasFlowPath(source, sink)
 select sink.getNode(), source, sink, "Log entry depends on a $@.", source.getNode(),

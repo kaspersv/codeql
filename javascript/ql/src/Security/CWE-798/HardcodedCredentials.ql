@@ -20,6 +20,7 @@ import DataFlow::PathGraph
 bindingset[s]
 predicate looksLikeATemplate(string s) { s.regexpMatch(".*((\\{\\{.*\\}\\})|(<.*>)|(\\(.*\\))).*") }
 
+pragma[no_dynamic_join_order]
 from Configuration cfg, DataFlow::PathNode source, DataFlow::PathNode sink, string value
 where
   cfg.hasFlowPath(source, sink) and

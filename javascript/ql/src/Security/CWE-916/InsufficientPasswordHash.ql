@@ -14,6 +14,7 @@ import javascript
 import semmle.javascript.security.dataflow.InsufficientPasswordHashQuery
 import DataFlow::PathGraph
 
+pragma[no_dynamic_join_order]
 from Configuration cfg, DataFlow::PathNode source, DataFlow::PathNode sink
 where cfg.hasFlowPath(source, sink)
 select sink.getNode(), source, sink, "Password from $@ is hashed insecurely.", source.getNode(),
