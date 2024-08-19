@@ -141,6 +141,7 @@ module ExecTaintConfig implements DataFlow::StateConfigSig {
 
 module ExecTaint = TaintTracking::GlobalWithState<ExecTaintConfig>;
 
+pragma[no_dynamic_join_order]
 from
   ExecTaint::PathNode sourceNode, ExecTaint::PathNode sinkNode, string taintCause, string callChain,
   DataFlow::Node concatResult, Expr command

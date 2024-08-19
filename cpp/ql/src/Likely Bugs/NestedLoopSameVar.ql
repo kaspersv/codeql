@@ -13,6 +13,7 @@
 
 import NestedLoopSameVar
 
+pragma[no_dynamic_join_order]
 from ForStmt inner, Variable iteration, ForStmt outer
 where nestedForViolation(inner, iteration, outer)
 select inner.getCondition(), "Nested for statement uses loop variable $@ of enclosing $@.",

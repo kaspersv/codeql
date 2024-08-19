@@ -172,6 +172,7 @@ module NonConstFlowConfig implements DataFlow::ConfigSig {
 
 module NonConstFlow = TaintTracking::Global<NonConstFlowConfig>;
 
+pragma[no_dynamic_join_order]
 from
   FormattingFunctionCall call, Expr formatString, NonConstFlow::PathNode sink,
   NonConstFlow::PathNode source

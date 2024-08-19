@@ -30,6 +30,7 @@ import UseAfterFreeParam
 
 module UseAfterFreeTrace = FlowFromFree<UseAfterFreeParam>;
 
+pragma[no_dynamic_join_order]
 from UseAfterFreeTrace::PathNode source, UseAfterFreeTrace::PathNode sink, DeallocationExpr dealloc
 where
   UseAfterFreeTrace::flowPath(source, sink) and
