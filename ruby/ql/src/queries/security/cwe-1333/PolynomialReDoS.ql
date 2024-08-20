@@ -17,6 +17,7 @@ import codeql.ruby.security.regexp.PolynomialReDoSCustomizations::PolynomialReDo
 import codeql.ruby.security.regexp.PolynomialReDoSQuery
 import PolynomialReDoSFlow::PathGraph
 
+pragma[no_dynamic_join_order]
 from
   PolynomialReDoSFlow::PathNode source, PolynomialReDoSFlow::PathNode sink, PR::Sink sinkNode,
   PR::PolynomialBackTrackingTerm regexp
