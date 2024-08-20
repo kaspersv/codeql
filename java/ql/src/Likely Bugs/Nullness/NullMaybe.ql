@@ -17,6 +17,7 @@ import java
 private import semmle.code.java.dataflow.SSA
 private import semmle.code.java.dataflow.Nullness
 
+pragma[no_dynamic_join_order]
 from VarAccess access, SsaSourceVariable var, string msg, Expr reason
 where
   nullDeref(var, access, msg, reason) and

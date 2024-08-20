@@ -50,6 +50,7 @@ module Flow =
 
 import Flow::PathGraph
 
+pragma[no_dynamic_join_order]
 from Flow::PathNode source, Flow::PathNode sink, string message
 where
   (

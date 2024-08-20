@@ -15,6 +15,7 @@ import java
 import semmle.code.java.dataflow.NullGuards
 import semmle.code.java.controlflow.Guards
 
+pragma[no_dynamic_join_order]
 from Expr guard, Expr e, Expr reason, string msg
 where
   guard = basicNullGuard(e, _, true) and

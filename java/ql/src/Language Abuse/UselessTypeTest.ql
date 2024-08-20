@@ -12,6 +12,7 @@
 
 import java
 
+pragma[no_dynamic_join_order]
 from InstanceOfExpr ioe, RefType t, RefType ct
 where
   t = ioe.getExpr().getType() and

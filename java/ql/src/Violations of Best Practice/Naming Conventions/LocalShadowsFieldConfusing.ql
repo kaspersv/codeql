@@ -13,6 +13,7 @@
 import java
 import Shadowing
 
+pragma[no_dynamic_join_order]
 from LocalVariableDecl d, Class c, Field f, Callable callable, string callableType, string message
 where
   shadows(d, c, f, callable) and

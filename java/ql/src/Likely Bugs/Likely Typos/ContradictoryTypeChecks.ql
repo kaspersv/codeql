@@ -46,6 +46,7 @@ predicate contradictoryTypeCheck(Expr e, Variable v, RefType t, RefType sup, Exp
   )
 }
 
+pragma[no_dynamic_join_order]
 from Expr e, Variable v, RefType t, RefType sup, Expr cond
 where contradictoryTypeCheck(e, v, t, sup, cond)
 select e, "This access of $@ cannot be of type $@, since $@ ensures that it is not of type $@.", v,

@@ -115,6 +115,7 @@ predicate abortsControlFlow(Stmt s) {
   s instanceof ThrowStmt
 }
 
+pragma[no_dynamic_join_order]
 from Stmt c, Stmt s, Stmt t
 where
   suspectIndentation(c, s, t) and
