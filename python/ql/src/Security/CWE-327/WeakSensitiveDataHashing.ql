@@ -18,6 +18,7 @@ import semmle.python.dataflow.new.DataFlow
 import semmle.python.dataflow.new.TaintTracking
 import WeakSensitiveDataHashingFlow::PathGraph
 
+pragma[no_dynamic_join_order]
 from
   WeakSensitiveDataHashingFlow::PathNode source, WeakSensitiveDataHashingFlow::PathNode sink,
   string ending, string algorithmName, string classification

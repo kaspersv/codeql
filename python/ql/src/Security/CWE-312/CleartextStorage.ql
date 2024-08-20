@@ -18,6 +18,7 @@ private import semmle.python.dataflow.new.DataFlow
 import CleartextStorageFlow::PathGraph
 import semmle.python.security.dataflow.CleartextStorageQuery
 
+pragma[no_dynamic_join_order]
 from
   CleartextStorageFlow::PathNode source, CleartextStorageFlow::PathNode sink, string classification
 where

@@ -18,6 +18,7 @@ private import semmle.python.dataflow.new.DataFlow
 import CleartextLoggingFlow::PathGraph
 import semmle.python.security.dataflow.CleartextLoggingQuery
 
+pragma[no_dynamic_join_order]
 from
   CleartextLoggingFlow::PathNode source, CleartextLoggingFlow::PathNode sink, string classification
 where

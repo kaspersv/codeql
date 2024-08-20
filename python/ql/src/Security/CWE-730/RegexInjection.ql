@@ -18,6 +18,7 @@ private import semmle.python.Concepts
 import semmle.python.security.dataflow.RegexInjectionQuery
 import RegexInjectionFlow::PathGraph
 
+pragma[no_dynamic_join_order]
 from
   RegexInjectionFlow::PathNode source, RegexInjectionFlow::PathNode sink,
   RegexExecution regexExecution

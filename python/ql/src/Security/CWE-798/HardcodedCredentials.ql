@@ -125,6 +125,7 @@ module HardcodedCredentialsFlow = TaintTracking::Global<HardcodedCredentialsConf
 
 import HardcodedCredentialsFlow::PathGraph
 
+pragma[no_dynamic_join_order]
 from HardcodedCredentialsFlow::PathNode src, HardcodedCredentialsFlow::PathNode sink
 where
   HardcodedCredentialsFlow::flowPath(src, sink) and

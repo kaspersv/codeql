@@ -74,6 +74,7 @@ predicate typeerror_is_caught(ControlFlowNode f) {
   )
 }
 
+pragma[no_dynamic_join_order]
 from ControlFlowNode f, ClassValue c, ControlFlowNode origin
 where
   not typeerror_is_caught(f) and

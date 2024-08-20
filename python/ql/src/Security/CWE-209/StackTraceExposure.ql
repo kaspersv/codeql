@@ -17,6 +17,7 @@ import python
 import semmle.python.security.dataflow.StackTraceExposureQuery
 import StackTraceExposureFlow::PathGraph
 
+pragma[no_dynamic_join_order]
 from StackTraceExposureFlow::PathNode source, StackTraceExposureFlow::PathNode sink
 where StackTraceExposureFlow::flowPath(source, sink)
 select sink.getNode(), source, sink,

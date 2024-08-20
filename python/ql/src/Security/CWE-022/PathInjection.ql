@@ -20,6 +20,7 @@ import python
 import semmle.python.security.dataflow.PathInjectionQuery
 import PathInjectionFlow::PathGraph
 
+pragma[no_dynamic_join_order]
 from PathInjectionFlow::PathNode source, PathInjectionFlow::PathNode sink
 where PathInjectionFlow::flowPath(source, sink)
 select sink.getNode(), source, sink, "This path depends on a $@.", source.getNode(),

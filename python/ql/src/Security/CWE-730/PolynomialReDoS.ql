@@ -17,6 +17,7 @@ import python
 import semmle.python.security.dataflow.PolynomialReDoSQuery
 import PolynomialReDoSFlow::PathGraph
 
+pragma[no_dynamic_join_order]
 from
   PolynomialReDoSFlow::PathNode source, PolynomialReDoSFlow::PathNode sink, Sink sinkNode,
   PolynomialBackTrackingTerm regexp

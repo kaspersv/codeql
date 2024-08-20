@@ -15,6 +15,7 @@
 import python
 import Cyclic
 
+pragma[no_dynamic_join_order]
 // This is a potentially crashing bug if
 // 1. the imports in the whole cycle are lexically outside a def (and so executed at import time)
 // 2. there is a use ('M.foo' or 'from M import foo') of the imported module that is lexically outside a def
