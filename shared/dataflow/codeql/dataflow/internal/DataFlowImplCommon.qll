@@ -280,7 +280,7 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
      * callable of `lambdaCall`.
      */
     pragma[nomagic]
-    predicate revLambdaFlow(
+    recompute predicate revLambdaFlow(
       DataFlowCall lambdaCall, LambdaCallKind kind, Node node, DataFlowType t, boolean toReturn,
       boolean toJump, DataFlowCallOption lastCall
     ) {
