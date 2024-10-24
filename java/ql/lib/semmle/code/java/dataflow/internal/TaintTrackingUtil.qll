@@ -83,18 +83,15 @@ module LocalTaintFlow<nodeSig/1 source, nodeSig/1 sink> {
   }
 }
 
-cached
 private module Cached {
   private import DataFlowImplCommon as DataFlowImplCommon
   private import DataFlowPrivate as DataFlowPrivate
 
-  cached
   predicate forceCachingInSameStage() { DataFlowImplCommon::forceCachingInSameStage() }
 
   /**
    * Holds if taint can flow in one local step from `src` to `sink`.
    */
-  cached
   predicate localTaintStep(DataFlow::Node src, DataFlow::Node sink) {
     DataFlow::localFlowStep(src, sink)
     or
@@ -118,7 +115,6 @@ private module Cached {
    * local data flow steps. That is, `src` and `sink` are likely to represent
    * different objects.
    */
-  cached
   predicate localAdditionalTaintStep(DataFlow::Node src, DataFlow::Node sink, string model) {
     localAdditionalTaintExprStep(src.asExpr(), sink.asExpr(), model)
     or
@@ -146,7 +142,6 @@ private module Cached {
    * Holds if the additional step from `src` to `sink` should be included in all
    * global taint flow configurations.
    */
-  cached
   predicate defaultAdditionalTaintStep(DataFlow::Node src, DataFlow::Node sink, string model) {
     localAdditionalTaintStep(src, sink, model)
     or
@@ -159,7 +154,6 @@ private module Cached {
    * Holds if `node` should be a sanitizer in all global taint flow configurations
    * but not in local taint.
    */
-  cached
   predicate defaultTaintSanitizer(DataFlow::Node node) {
     // Ignore paths through test code.
     node.getEnclosingCallable().getDeclaringType() instanceof NonSecurityTestClass or

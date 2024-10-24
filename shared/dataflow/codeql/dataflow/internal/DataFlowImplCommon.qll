@@ -929,17 +929,14 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
     ReturnKindExt getKind() { result = pos.getKind() }
   }
 
-  cached
   private module Cached {
     /**
      * If needed, call this predicate from `DataFlowImplSpecific.qll` in order to
      * force a stage-dependency on the `DataFlowImplCommon.qll` stage and thereby
      * collapsing the two stages.
      */
-    cached
     predicate forceCachingInSameStage() { any() }
 
-    cached
     SndLevelScopeOption getSecondLevelScopeCached(Node n) {
       result = SndLevelScopeOption::some(getSecondLevelScope(n))
       or
@@ -947,56 +944,43 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
       not exists(getSecondLevelScope(n))
     }
 
-    cached
     predicate nodeEnclosingCallable(Node n, DataFlowCallable c) { c = nodeGetEnclosingCallable(n) }
 
-    cached
     predicate callEnclosingCallable(DataFlowCall call, DataFlowCallable c) {
       c = call.getEnclosingCallable()
     }
 
-    cached
     predicate nodeDataFlowType(Node n, DataFlowType t) { t = getNodeType(n) }
 
-    cached
     predicate compatibleTypesCached(DataFlowType t1, DataFlowType t2) { compatibleTypes(t1, t2) }
 
     private predicate relevantType(DataFlowType t) { t = getNodeType(_) }
 
-    cached
     predicate isTopType(DataFlowType t) {
       strictcount(DataFlowType t0 | relevantType(t0)) =
         strictcount(DataFlowType t0 | relevantType(t0) and compatibleTypesCached(t, t0))
     }
 
-    cached
     predicate typeStrongerThanCached(DataFlowType t1, DataFlowType t2) { typeStrongerThan(t1, t2) }
 
-    cached
     predicate jumpStepCached(Node node1, Node node2) { jumpStep(node1, node2) }
 
-    cached
     predicate clearsContentCached(Node n, ContentSet c) { clearsContent(n, c) }
 
-    cached
     predicate expectsContentCached(Node n, ContentSet c) { expectsContent(n, c) }
 
-    cached
     predicate isUnreachableInCallCached(NodeRegion nr, DataFlowCall call) {
       isUnreachableInCall(nr, call)
     }
 
-    cached
     predicate outNodeExt(Node n) {
       n instanceof OutNode
       or
       n.(PostUpdateNode).getPreUpdateNode() instanceof ArgNode
     }
 
-    cached
     predicate hiddenNode(Node n) { nodeIsHidden(n) }
 
-    cached
     OutNodeExt getAnOutNodeExt(DataFlowCall call, ReturnKindExt k) {
       result = getAnOutNode(call, k.(ValueReturnKind).getKind())
       or
@@ -1018,10 +1002,8 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
       )
     }
 
-    cached
     predicate castNode(Node n) { n instanceof CastNode }
 
-    cached
     predicate castingNode(Node n) {
       castNode(n) or
       n instanceof ParamNode or
@@ -1032,17 +1014,14 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
       readSet(_, _, n)
     }
 
-    cached
     predicate parameterNode(Node p, DataFlowCallable c, ParameterPosition pos) {
       isParameterNode(p, c, pos)
     }
 
-    cached
     predicate argumentNode(Node n, DataFlowCall call, ArgumentPosition pos) {
       isArgumentNode(n, call, pos)
     }
 
-    cached
     DataFlowCallable viableCallableCached(DataFlowCall call) { result = viableCallable(call) }
 
     /**
@@ -1051,7 +1030,6 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
      * `lastCall` records the call required to reach `call` in order for the result
      * to be a viable target, if any.
      */
-    cached
     DataFlowCallable viableCallableLambda(DataFlowCall call, DataFlowCallOption lastCall) {
       exists(Node creation, LambdaCallKind kind |
         LambdaFlow::revLambdaFlow(call, kind, creation, _, _, _, lastCall) and
@@ -1063,7 +1041,6 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
      * Holds if the set of viable implementations that can be called by `call`
      * might be improved by knowing the call context.
      */
-    cached
     predicate mayBenefitFromCallContextExt(DataFlowCall call, DataFlowCallable callable) {
       (
         mayBenefitFromCallContext(call)
@@ -1077,7 +1054,6 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
      * Gets a viable dispatch target of `call` in the context `ctx`. This is
      * restricted to those `call`s for which a context might make a difference.
      */
-    cached
     DataFlowCallable viableImplInCallContextExt(DataFlowCall call, DataFlowCall ctx) {
       result = viableImplInCallContext(call, ctx) and
       result = viableCallable(call)
@@ -1096,7 +1072,6 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
      * pruning stages 1+2 and flow exploration; all subsequent pruning stages use a
      * pruned version, based on the relevant call edges from the previous stage.
      */
-    cached
     module CachedCallContextSensitivity {
       private module CallContextSensitivityInput implements CallContextSensitivityInputSig {
         predicate relevantCallEdgeIn(DataFlowCall call, DataFlowCallable c) {
@@ -1110,34 +1085,28 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
 
       private module Impl1 = CallContextSensitivity<CallContextSensitivityInput>;
 
-      cached
       predicate reducedViableImplInCallContext(
         DataFlowCall call, DataFlowCallable c, DataFlowCall ctx
       ) {
         Impl1::reducedViableImplInCallContext(call, c, ctx)
       }
 
-      cached
       predicate recordDataFlowCallSiteUnreachable(DataFlowCall call, DataFlowCallable c) {
         Impl1::recordDataFlowCallSiteUnreachable(call, c)
       }
 
-      cached
       predicate reducedViableImplInReturn(DataFlowCallable c, DataFlowCall call) {
         Impl1::reducedViableImplInReturn(c, call)
       }
 
-      cached
       CcCall getSpecificCallContextCall(DataFlowCall call, DataFlowCallable c) {
         result = Impl1::getSpecificCallContextCall(call, c)
       }
 
-      cached
       predicate callContextAffectsDispatch(DataFlowCall call, Cc ctx) {
         Impl1::callContextAffectsDispatch(call, ctx)
       }
 
-      cached
       CcNoCall getSpecificCallContextReturn(DataFlowCallable c, DataFlowCall call) {
         result = Impl1::getSpecificCallContextReturn(c, call)
       }
@@ -1163,21 +1132,16 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
 
       import Impl2
 
-      cached
       predicate instanceofCc(Cc cc) { any() }
 
-      cached
       predicate instanceofCcCall(CcCall cc) { any() }
 
-      cached
       predicate instanceofCcNoCall(CcNoCall cc) { any() }
 
-      cached
       DataFlowCallable viableImplCallContextReduced(DataFlowCall call, CcCall ctx) {
         result = Impl2::viableImplCallContextReduced(call, ctx)
       }
 
-      cached
       DataFlowCall viableImplCallContextReducedReverse(DataFlowCallable callable, CcNoCall ctx) {
         result = Impl2::viableImplCallContextReducedReverse(callable, ctx)
       }
@@ -1196,7 +1160,6 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
      * Holds if `arg` is a possible argument to `p` in `call`, taking virtual
      * dispatch into account.
      */
-    cached
     predicate viableParamArg(DataFlowCall call, ParamNode p, ArgNode arg) {
       exists(ParameterPosition ppos |
         viableParam(call, ppos, p) and
@@ -1216,7 +1179,6 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
      * Holds if a value at return position `pos` can be returned to `out` via `call`,
      * taking virtual dispatch into account.
      */
-    cached
     predicate viableReturnPosOut(DataFlowCall call, ReturnPosition pos, Node out) {
       exists(ReturnKindExt kind |
         pos = viableReturnPos(call, kind) and
@@ -1441,7 +1403,6 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
          * If a read step was taken, then `read` captures the `Content`, the
          * container type, and the content type.
          */
-        cached
         predicate argumentValueFlowsThrough(
           ArgNode arg, ReadStepTypesOption read, Node out, string model
         ) {
@@ -1501,10 +1462,8 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
       parameterValueFlow(p, n.getPreUpdateNode(), TReadStepTypesNone(), _)
     }
 
-    cached
     predicate readSet(Node node1, ContentSet c, Node node2) { readStep(node1, c, node2) }
 
-    cached
     predicate storeSet(
       Node node1, ContentSet c, Node node2, DataFlowType contentType, DataFlowType containerType
     ) {
@@ -1531,7 +1490,6 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
      * This includes reverse steps through reads when the result of the read has
      * been stored into, in order to handle cases like `x.f1.f2 = y`.
      */
-    cached
     predicate store(
       Node node1, Content c, Node node2, DataFlowType contentType, DataFlowType containerType
     ) {
@@ -1565,22 +1523,17 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
       )
     }
 
-    cached
     predicate simpleLocalFlowStepExt(Node node1, Node node2, string model) {
       simpleLocalFlowStep(node1, node2, model) or
       reverseStepThroughInputOutputAlias(node1, node2, model)
     }
 
-    cached
     predicate allowParameterReturnInSelfCached(ParamNode p) { allowParameterReturnInSelf(p) }
 
-    cached
     predicate paramMustFlow(ParamNode p, ArgNode arg) { localMustFlowStep+(p, arg) }
 
-    cached
     ContentApprox getContentApproxCached(Content c) { result = getContentApprox(c) }
 
-    cached
     newtype TCallEdge =
       TMkCallEdge(DataFlowCall call, DataFlowCallable tgt) { viableCallableExt(call) = tgt }
 
@@ -1596,21 +1549,16 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
       QlBuiltins::InternSets<TCallEdge, NodeRegion, getAnUnreachableRegion/1>;
 
     /** A set of nodes that is unreachable in some call context. */
-    cached
     class UnreachableSet instanceof UnreachableSets::Set {
-      cached
       string toString() { result = "Unreachable" }
 
-      cached
       predicate contains(Node n) { exists(NodeRegion nr | super.contains(nr) and nr.contains(n)) }
 
-      cached
       DataFlowCallable getEnclosingCallable() {
         exists(NodeRegion nr | super.contains(nr) and result = getNodeRegionEnclosingCallable(nr))
       }
     }
 
-    cached
     UnreachableSet getUnreachableSet(TCallEdge edge) { result = UnreachableSets::getSet(edge) }
 
     private module UnreachableSetOption = Option<UnreachableSet>;
@@ -1631,7 +1579,6 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
       paramReturnNode(n, p, _, kind)
     }
 
-    cached
     newtype TReturnPosition =
       TReturnPosition0(DataFlowCallable c, ReturnKindExt kind) {
         hasValueReturnKindIn(_, kind, c)
@@ -1639,7 +1586,6 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
         hasParamReturnKindIn(_, _, kind, c)
       }
 
-    cached
     ReturnPosition getValueReturnPosition(ReturnNode ret) {
       exists(ReturnKindExt kind, DataFlowCallable c |
         hasValueReturnKindIn(ret, kind, c) and
@@ -1647,7 +1593,6 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
       )
     }
 
-    cached
     ReturnPosition getParamReturnPosition(PostUpdateNode n, ParamNode p) {
       exists(ReturnKindExt kind, DataFlowCallable c |
         hasParamReturnKindIn(n, p, kind, c) and
@@ -1655,53 +1600,43 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
       )
     }
 
-    cached
     newtype TLocalFlowCallContext =
       TAnyLocalCall() or
       TSpecificLocalCall(UnreachableSets::Set ns)
 
-    cached
     newtype TReturnKindExt =
       TValueReturn(ReturnKind kind) or
       TParamUpdate(ParameterPosition pos) { exists(ParamNode p | p.isParameterOf(_, pos)) }
 
-    cached
     newtype TBooleanOption =
       TBooleanNone() or
       TBooleanSome(boolean b) { b = true or b = false }
 
-    cached
     newtype TDataFlowCallOption =
       TDataFlowCallNone() or
       TDataFlowCallSome(DataFlowCall call)
 
-    cached
     newtype TReturnCtx =
       TReturnCtxNone() or
       TReturnCtxNoFlowThrough() or
       TReturnCtxMaybeFlowThrough(ReturnPosition pos)
 
-    cached
     newtype TAccessPathFront =
       TFrontNil() or
       TFrontHead(Content c)
 
-    cached
     newtype TApproxAccessPathFront =
       TApproxFrontNil() or
       TApproxFrontHead(ContentApprox c)
 
-    cached
     newtype TAccessPathFrontOption =
       TAccessPathFrontNone() or
       TAccessPathFrontSome(AccessPathFront apf)
 
-    cached
     newtype TApproxAccessPathFrontOption =
       TApproxAccessPathFrontNone() or
       TApproxAccessPathFrontSome(ApproxAccessPathFront apf)
 
-    cached
     newtype TNodeEx =
       TNodeNormal(Node n) or
       TNodeImplicitRead(Node n) or // will be restricted to nodes with actual implicit reads in `DataFlowImpl.qll`
@@ -1712,7 +1647,6 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
     /**
      * Holds if data can flow in one local step from `node1` to `node2`.
      */
-    cached
     predicate localFlowStepExImpl(NodeEx node1, NodeEx node2, string model) {
       exists(Node n1, Node n2 |
         node1.asNode() = n1 and
@@ -1729,7 +1663,6 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
       )
     }
 
-    cached
     ReturnPosition getReturnPositionEx(NodeEx ret) {
       result = getValueReturnPosition(ret.asNode())
       or

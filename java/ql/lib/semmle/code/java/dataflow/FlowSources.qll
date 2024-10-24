@@ -371,7 +371,6 @@ class ExportedAndroidContentProviderInput extends RemoteFlowSource, AndroidConte
  * calls `startActivityForResult` with an implicit Intent.
  */
 class OnActivityResultIntentSource extends OnActivityResultIncomingIntent, RemoteFlowSource {
-  cached
   OnActivityResultIntentSource() { this.isRemoteSource() }
 
   override string getSourceType() { result = "Android onActivityResult incoming Intent" }
