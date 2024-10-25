@@ -10,4 +10,5 @@ module DataFlow {
   private import codeql.dataflow.DataFlow
   import DataFlowMake<Location, JavaDataFlow>
   import semmle.code.java.dataflow.internal.DataFlowImpl1
+  import semmle.code.java.dataflow.Overlay
 }
