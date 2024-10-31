@@ -198,6 +198,12 @@ module Public {
     abstract predicate isParameterOf(DataFlowCallable c, int pos);
   }
 
+  pragma[nomagic]
+  private Location getOverlayParameterLocation(Parameter p) {
+    hasOverlay() and
+    result = p.getLocation()
+  }
+
   /**
    * A parameter, viewed as a node in a data flow graph.
    */
@@ -208,7 +214,13 @@ module Public {
 
     override string toString() { result = param.toString() }
 
-    override Location getLocation() { result = param.getLocation() }
+    pragma[nomagic]
+    override recompute Location getLocation() {
+      result = getOverlayParameterLocation(param)
+      or
+      not exists(getOverlayParameterLocation(param)) and
+      result = param.getLocation()
+    }
 
     /** Gets the parameter corresponding to this node. */
     Parameter getParameter() { result = param }
@@ -240,6 +252,12 @@ module Public {
     Call getCall() { result = call }
   }
 
+  pragma[nomagic]
+  private Location getOverlayCallableLocation(Callable p) {
+    hasOverlay() and
+    result = p.getLocation()
+  }
+
   /**
    * An instance parameter for an instance method or constructor.
    */
@@ -250,7 +268,13 @@ module Public {
 
     override string toString() { result = "parameter this" }
 
-    override Location getLocation() { result = callable.getLocation() }
+    pragma[nomagic]
+    override recompute Location getLocation() {
+      result = getOverlayCallableLocation(callable)
+      or
+      not exists(getOverlayCallableLocation(callable)) and
+      result = callable.getLocation()
+    }
 
     /** Gets the callable containing this `this` parameter. */
     Callable getCallable() { result = callable }
@@ -295,6 +319,12 @@ module Public {
     abstract Node getPreUpdateNode();
   }
 
+  pragma[nomagic]
+  private Location getOverlayFieldLocation(Field f) {
+    hasOverlay() and
+    result = f.getLocation()
+  }
+
   /**
    * A node representing the value of a field.
    */
@@ -304,7 +334,13 @@ module Public {
 
     override string toString() { result = this.getField().toString() }
 
-    override Location getLocation() { result = this.getField().getLocation() }
+    pragma[nomagic]
+    override recompute Location getLocation() {
+      result = getOverlayFieldLocation(this.getField())
+      or
+      not exists(getOverlayFieldLocation(this.getField())) and
+      result = this.getField().getLocation()
+    }
   }
 
   /**
