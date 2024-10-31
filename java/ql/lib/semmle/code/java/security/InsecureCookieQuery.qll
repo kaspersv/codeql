@@ -4,7 +4,7 @@ import java
 private import semmle.code.java.dataflow.DataFlow
 private import semmle.code.java.frameworks.Servlets
 
-private predicate isSafeSecureCookieSetting(Expr e) {
+private recompute predicate isSafeSecureCookieSetting(Expr e) {
   e.(CompileTimeConstantExpr).getBooleanValue() = true
   or
   exists(Method isSecure |
@@ -17,7 +17,7 @@ private predicate isSafeSecureCookieSetting(Expr e) {
 
 /** A dataflow configuration to reason about the failure to use secure cookies. */
 module SecureCookieConfig implements DataFlow::ConfigSig {
-  predicate isSource(DataFlow::Node source) {
+  pragma[nomagic] recompute predicate isSource(DataFlow::Node source) {
     exists(MethodCall ma, Method m | ma.getMethod() = m |
       m.getDeclaringType() instanceof TypeCookie and
       m.getName() = "setSecure" and
@@ -31,9 +31,13 @@ module SecureCookieConfig implements DataFlow::ConfigSig {
     )
   }
 
-  predicate isSink(DataFlow::Node sink) {
+  pragma[nomagic] recompute predicate isSink(DataFlow::Node sink) {
     sink.asExpr() =
       any(MethodCall add | add.getMethod() instanceof ResponseAddCookieMethod).getArgument(0)
+  }
+
+  pragma[nomagic] recompute predicate isBarrier(DataFlow::Node node) {
+    DataFlow::discardNode(node)
   }
 }
 
