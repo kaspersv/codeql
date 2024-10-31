@@ -13,7 +13,9 @@ module RegexInjectionConfig implements DataFlow::ConfigSig {
 
   predicate isSink(DataFlow::Node sink) { sink instanceof RegexInjectionSink }
 
-  predicate isBarrier(DataFlow::Node node) { node instanceof RegexInjectionSanitizer }
+  predicate isBarrier(DataFlow::Node node) {
+    node instanceof RegexInjectionSanitizer or DataFlow::discardNode(node)
+  }
 
   predicate observeDiffInformedIncrementalMode() { any() }
 }

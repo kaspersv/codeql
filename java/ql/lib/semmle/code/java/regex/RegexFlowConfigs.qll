@@ -153,7 +153,8 @@ private module RegexFlowConfig implements DataFlow::ConfigSig {
   }
 
   predicate isBarrier(DataFlow::Node node) {
-    node.getEnclosingCallable().getDeclaringType() instanceof NonSecurityTestClass
+    node.getEnclosingCallable().getDeclaringType() instanceof NonSecurityTestClass or
+    DataFlow::discardNode(node)
   }
 
   int fieldFlowBranchLimit() { result = 1 }
