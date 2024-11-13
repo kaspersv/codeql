@@ -39,9 +39,10 @@ module ZipSlipConfig implements DataFlow::ConfigSig {
 
   predicate isSink(DataFlow::Node sink) { sink instanceof FileCreationSink }
 
-  predicate isBarrier(DataFlow::Node node) {
+  pragma[nomagic] recompute predicate isBarrier(DataFlow::Node node) {
     node instanceof SimpleTypeSanitizer or
-    node instanceof PathInjectionSanitizer
+    node instanceof PathInjectionSanitizer or
+    DataFlow::discardNode(node)
   }
 
   predicate observeDiffInformedIncrementalMode() { any() }
