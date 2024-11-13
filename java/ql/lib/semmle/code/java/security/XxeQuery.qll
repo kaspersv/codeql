@@ -27,6 +27,8 @@ private module SafeSaxSourceFlowConfig implements DataFlow::ConfigSig {
 
   predicate isSink(DataFlow::Node sink) { sink.asExpr() = any(XmlParserCall parse).getSink() }
 
+  predicate isBarrier(DataFlow::Node node) { DataFlow::discardNode(node) }
+
   int fieldFlowBranchLimit() { result = 0 }
 }
 
