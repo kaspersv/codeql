@@ -67,9 +67,7 @@ module TypeTracking<TypeTrackingInput I> {
 
   private class ContentOption = ContentOption::Option;
 
-  cached
   private module Cached {
-    cached
     newtype TStepSummary =
       LevelStep() or
       CallStep() or
@@ -81,7 +79,6 @@ module TypeTracking<TypeTrackingInput I> {
       WithoutContent(ContentFilter filter) { withoutContentStep(_, _, filter) } or
       JumpStep()
 
-    cached
     newtype TTypeTracker =
       MkTypeTracker(Boolean hasCall, ContentOption content) {
         content.isNone()
@@ -99,7 +96,6 @@ module TypeTracking<TypeTrackingInput I> {
         )
       }
 
-    cached
     newtype TTypeBackTracker =
       MkTypeBackTracker(Boolean hasReturn, ContentOption content) {
         content.isNone()
@@ -116,7 +112,6 @@ module TypeTracking<TypeTrackingInput I> {
       }
 
     /** Gets the summary resulting from appending `step` to type-tracking summary `tt`. */
-    cached
     TypeTracker append(TypeTracker tt, StepSummary step) {
       exists(Boolean hasCall, ContentOption currentContents |
         tt = MkTypeTracker(hasCall, currentContents)
@@ -161,7 +156,6 @@ module TypeTracking<TypeTrackingInput I> {
     }
 
     /** Gets the summary resulting from prepending `step` to this type-tracking summary. */
-    cached
     TypeBackTracker prepend(TypeBackTracker tbt, StepSummary step) {
       exists(Boolean hasReturn, ContentOption content |
         tbt = MkTypeBackTracker(hasReturn, content)
@@ -205,7 +199,6 @@ module TypeTracking<TypeTrackingInput I> {
       )
     }
 
-    cached
     predicate smallStepNoCall(Node nodeFrom, LocalSourceNode nodeTo, StepSummary summary) {
       levelStepNoCall(nodeFrom, nodeTo) and summary = LevelStep()
       or
@@ -237,7 +230,6 @@ module TypeTracking<TypeTrackingInput I> {
       jumpStep(nodeFrom, nodeTo) and summary = JumpStep()
     }
 
-    cached
     predicate smallStepCall(Node nodeFrom, LocalSourceNode nodeTo, StepSummary summary) {
       levelStepCall(nodeFrom, nodeTo) and summary = LevelStep()
       or
@@ -249,7 +241,6 @@ module TypeTracking<TypeTrackingInput I> {
     pragma[inline]
     private predicate isLocalSourceNode(LocalSourceNode n) { any() }
 
-    cached
     predicate standardFlowsTo(Node localSource, Node dst) {
       not nonStandardFlowsTo(_, _) and
       // explicit type check in base case to avoid repeated type tests in recursive case
@@ -262,12 +253,10 @@ module TypeTracking<TypeTrackingInput I> {
       )
     }
 
-    cached
     predicate stepNoCall(LocalSourceNode nodeFrom, LocalSourceNode nodeTo, StepSummary summary) {
       exists(Node mid | flowsTo(nodeFrom, mid) and smallStepNoCall(mid, nodeTo, summary))
     }
 
-    cached
     predicate stepCall(LocalSourceNode nodeFrom, LocalSourceNode nodeTo, StepSummary summary) {
       exists(Node mid | flowsTo(nodeFrom, mid) and smallStepCall(mid, nodeTo, summary))
     }
