@@ -195,6 +195,17 @@ class Location extends @location {
   }
 }
 
+pragma[nomagic]
+predicate discardableLocation(string file, Location l) {
+  not hasOverlay() and
+  file = getRawFileForLoc(l)
+}
+
+pragma[nomagic]
+discard recompute predicate discardLocation(Location l) {
+  exists(string file | discardableLocation(file, l) and discardFile(file))
+}
+
 private predicate hasSourceLocation(Top l, Location loc, File f) {
   hasLocation(l, loc) and f = loc.getFile() and f.isSourceFile()
 }

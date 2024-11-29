@@ -57,6 +57,17 @@ class Stmt extends StmtParent, ExprParent, @stmt {
   string getHalsteadID() { result = "Stmt" }
 }
 
+pragma[nomagic]
+predicate discardableStmt(string file, Stmt s) {
+  not hasOverlay() and
+  file = getRawFile(s)
+}
+
+pragma[nomagic]
+discard recompute predicate discardStmt(Stmt s) {
+  exists(string file | discardableStmt(file, s) and discardFile(file))
+}
+
 /** A statement parent is any element that can have a statement as its child. */
 class StmtParent extends @stmtparent, Top { }
 

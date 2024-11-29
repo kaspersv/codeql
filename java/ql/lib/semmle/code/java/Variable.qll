@@ -72,6 +72,17 @@ class LocalVariableDecl extends @localvar, LocalScopeVariable {
   override string getAPrimaryQlClass() { result = "LocalVariableDecl" }
 }
 
+pragma[nomagic]
+predicate discardableLocalVarDecl(string file, LocalVariableDecl l) {
+  not hasOverlay() and
+  file = getRawFile(l)
+}
+
+pragma[nomagic]
+discard recompute predicate discardLocalVarDecl(LocalVariableDecl l) {
+  exists(string file | discardableLocalVarDecl(file, l) and discardFile(file))
+}
+
 /** A formal parameter of a callable. */
 class Parameter extends Element, @param, LocalScopeVariable {
   /** Gets the type of this formal parameter. */

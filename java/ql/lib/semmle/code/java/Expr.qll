@@ -115,6 +115,17 @@ class Expr extends ExprParent, @expr {
   }
 }
 
+pragma[nomagic]
+predicate discardableExpr(string file, Expr e) {
+  not hasOverlay() and
+  file = getRawFile(e)
+}
+
+pragma[nomagic]
+discard recompute predicate discardExpr(Expr e) {
+  exists(string file | discardableExpr(file, e) and discardFile(file))
+}
+
 /**
  * Holds if the specified type is either a primitive type or type `String`.
  *
