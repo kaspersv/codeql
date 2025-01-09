@@ -131,3 +131,15 @@ class Parameter extends Element, @param, LocalScopeVariable {
   /** Holds if this is an anonymous parameter, `_` */
   predicate isAnonymous() { this.getName() = "" }
 }
+
+overlay[local]
+pragma[nomagic]
+predicate discardableLocalVarDecl(string file, @localvar l) {
+  not hasOverlay() and
+  file = getRawFile(l)
+}
+
+pragma[nomagic]
+discard predicate discardLocalVarDecl(@localvar l) {
+  exists(string file | discardableLocalVarDecl(file, l) and discardFile(file))
+}

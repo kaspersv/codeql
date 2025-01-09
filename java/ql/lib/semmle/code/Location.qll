@@ -219,3 +219,16 @@ private predicate fixedHasLocation(Top l, Location loc, File f) {
   not hasSourceLocation(l, _, _) and
   locations_default(loc, f, _, _, _, _)
 }
+
+overlay[local]
+pragma[nomagic]
+predicate discardableLocation(string file, @location l) {
+  not hasOverlay() and
+  file = getRawFileForLoc(l) and
+  not (exists(@file f | hasLocation(f, l)))
+}
+
+pragma[nomagic]
+discard predicate discardLocation(@location l) {
+  exists(string file | discardableLocation(file, l) and discardFile(file))
+}

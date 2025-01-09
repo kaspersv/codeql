@@ -895,3 +895,22 @@ class ExtensionMethod extends Method {
     else result = 0
   }
 }
+
+pragma[nomagic]
+baseDiscard predicate discardBase(@element m) { isBase(m) and isOverlay(m) }
+
+overlay[local]
+pragma[nomagic]
+predicate isBase(@element e) {
+  not hasOverlay() and
+  classes_or_interfaces(e, _, _, _)
+}
+
+overlay[local]
+pragma[nomagic]
+predicate isOverlay(@element e) {
+  hasOverlay() and
+  classes_or_interfaces(e, _, _, _)
+}
+
+// discard predicate discardId(@top t) { none() }
