@@ -1,6 +1,3 @@
-overlay[local]
-module;
-
 private import codeql.dataflow.DataFlow
 private import codeql.typetracking.TypeTracking as Tt
 private import codeql.util.Location
@@ -106,45 +103,59 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
       Content getAMatchingContent() { none() }
     }
 
+    overlay[local]
     predicate compatibleContents(Content storeContents, Content loadContents) {
       storeContents.getAStoreContent() = loadContents.getAReadContent()
     }
 
+    overlay[local]
     predicate simpleLocalSmallStep(Node node1, Node node2) {
       simpleLocalFlowStepExt(node1, node2, _)
     }
 
+    overlay[local]
     predicate levelStepNoCall(Node n1, LocalSourceNode n2) { none() }
 
+    overlay[local]
     predicate levelStepCall(Node n1, LocalSourceNode n2) {
       argumentValueFlowsThrough(n1, TReadStepTypesNone(), n2, _)
     }
 
     // TODO: support setters
+    overlay[local]
     predicate storeStep(Node n1, Node n2, Content f) { storeSet(n1, f, n2, _, _) }
 
+    overlay[local]
     private predicate loadStep0(Node n1, Node n2, Content f) {
       readSet(n1, f, n2)
       or
       argumentValueFlowsThrough(n1, TReadStepTypesSome(_, f, _), n2, _)
     }
 
+    overlay[local]
     predicate loadStep(Node n1, LocalSourceNode n2, Content f) { loadStep0(n1, n2, f) }
 
+    overlay[local]
     predicate loadStoreStep(Node nodeFrom, Node nodeTo, Content f1, Content f2) { none() }
 
+    overlay[local]
     predicate withContentStep(Node nodeFrom, LocalSourceNode nodeTo, ContentFilter f) { none() }
 
+    overlay[local]
     predicate withoutContentStep(Node nodeFrom, LocalSourceNode nodeTo, ContentFilter f) { none() }
 
+    overlay[local]
     predicate jumpStep(Node n1, LocalSourceNode n2) { jumpStepCached(n1, n2) }
 
+    overlay[local]
     predicate callStep(Node n1, LocalSourceNode n2) { viableParamArg(_, n2, n1) }
 
+    overlay[local]
     predicate returnStep(Node n1, LocalSourceNode n2) {
       viableReturnPosOut(_, [getValueReturnPosition(n1), getParamReturnPosition(n1, _)], n2)
     }
 
+    overlay[local]
     predicate hasFeatureBacktrackStoreTarget() { none() }
   }
 
@@ -157,6 +168,7 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
    * estimated per-`AccessPathFront` tuple cost. Access paths exceeding both of
    * these limits are represented with lower precision during pruning.
    */
+  overlay[local]
   predicate accessPathApproxCostLimits(int apLimit, int tupleLimit) {
     apLimit = 10 and
     tupleLimit = 10000
@@ -169,6 +181,7 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
    * estimated per-`AccessPathApprox` tuple cost. Access paths exceeding both of
    * these limits are represented with lower precision.
    */
+  overlay[local]
   predicate accessPathCostLimits(int apLimit, int tupleLimit) {
     apLimit = 5 and
     tupleLimit = 1000
@@ -178,6 +191,7 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
    * Holds if `arg` is an argument of `call` with an argument position that matches
    * parameter position `ppos`.
    */
+  overlay[local]
   pragma[noinline]
   predicate argumentPositionMatch(DataFlowCall call, ArgNode arg, ParameterPosition ppos) {
     exists(ArgumentPosition apos |
@@ -195,16 +209,19 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
    * calls. For this reason, we cannot reuse the code from `DataFlowImpl.qll` directly.
    */
   private module LambdaFlow {
+    overlay[local]
     pragma[noinline]
     private predicate viableParamNonLambda(DataFlowCall call, ParameterPosition ppos, ParamNode p) {
       p.isParameterOf(viableCallable(call), ppos)
     }
 
+    overlay[local]
     pragma[noinline]
     private predicate viableParamLambda(DataFlowCall call, ParameterPosition ppos, ParamNode p) {
       p.isParameterOf(viableCallableLambda(call, _), ppos)
     }
 
+    overlay[local]
     private predicate viableParamArgNonLambda(DataFlowCall call, ParamNode p, ArgNode arg) {
       exists(ParameterPosition ppos |
         viableParamNonLambda(call, ppos, p) and
@@ -212,6 +229,7 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
       )
     }
 
+    overlay[local]
     private predicate viableParamArgLambda(DataFlowCall call, ParamNode p, ArgNode arg) {
       exists(ParameterPosition ppos |
         viableParamLambda(call, ppos, p) and
@@ -227,12 +245,14 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
         )
       }
 
+    overlay[local]
     pragma[nomagic]
     private predicate hasSimpleReturnKindIn(ReturnNode ret, ReturnKind kind, DataFlowCallable c) {
       c = getNodeEnclosingCallable(ret) and
       kind = ret.getKind()
     }
 
+    overlay[local]
     pragma[nomagic]
     private TReturnPositionSimple getReturnPositionSimple(ReturnNode ret) {
       exists(ReturnKind kind, DataFlowCallable c |
@@ -241,16 +261,19 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
       )
     }
 
+    overlay[local]
     pragma[nomagic]
     private TReturnPositionSimple viableReturnPosNonLambda(DataFlowCall call, ReturnKind kind) {
       result = TReturnPositionSimple0(viableCallable(call), kind)
     }
 
+    overlay[local]
     pragma[nomagic]
     private TReturnPositionSimple viableReturnPosLambda(DataFlowCall call, ReturnKind kind) {
       result = TReturnPositionSimple0(viableCallableLambda(call, _), kind)
     }
 
+    overlay[local]
     private predicate viableReturnPosOutNonLambda(
       DataFlowCall call, TReturnPositionSimple pos, OutNode out
     ) {
@@ -260,6 +283,7 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
       )
     }
 
+    overlay[local]
     pragma[nomagic]
     private predicate viableReturnPosOutLambda(
       DataFlowCall call, TReturnPositionSimple pos, OutNode out
@@ -294,6 +318,7 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
       else any()
     }
 
+    overlay[local]
     pragma[nomagic]
     predicate revLambdaFlow0(
       DataFlowCall lambdaCall, LambdaCallKind kind, Node node, DataFlowType t, boolean toReturn,
@@ -368,6 +393,7 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
       )
     }
 
+    overlay[local]
     pragma[nomagic]
     predicate revLambdaFlowOutLambdaCall(
       DataFlowCall lambdaCall, LambdaCallKind kind, OutNode out, DataFlowType t, boolean toJump,
@@ -380,6 +406,7 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
       )
     }
 
+    overlay[local]
     pragma[nomagic]
     predicate revLambdaFlowOut(
       DataFlowCall lambdaCall, LambdaCallKind kind, TReturnPositionSimple pos, DataFlowType t,
@@ -395,6 +422,7 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
       )
     }
 
+    overlay[local]
     pragma[nomagic]
     predicate revLambdaFlowIn(
       DataFlowCall lambdaCall, LambdaCallKind kind, ParamNode p, DataFlowType t, boolean toJump,
@@ -404,6 +432,7 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
     }
   }
 
+  overlay[local]
   private DataFlowCallable viableCallableExt(DataFlowCall call) {
     result = viableCallableCached(call)
     or
@@ -454,6 +483,7 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
      * Holds if the call context `ctx` reduces the set of viable run-time
      * dispatch targets of call `call` in `c`.
      */
+    overlay[local]
     pragma[nomagic]
     predicate reducedViableImplInCallContext(DataFlowCall call, DataFlowCallable c, DataFlowCall ctx) {
       exists(int tgts, int ctxtgts |
@@ -467,6 +497,7 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
     /**
      * Holds if the call context `call` allows us to prune unreachable nodes in `callable`.
      */
+    overlay[local]
     pragma[nomagic]
     predicate recordDataFlowCallSiteUnreachable(DataFlowCall call, DataFlowCallable callable) {
       exists(NodeRegion nr |
@@ -491,6 +522,7 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
      * further and if this path restricts the set of call sites that can be
      * returned to.
      */
+    overlay[local]
     pragma[nomagic]
     predicate reducedViableImplInReturn(DataFlowCallable c, DataFlowCall call) {
       exists(int tgts, int ctxtgts |
@@ -641,6 +673,7 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
       )
     }
 
+    overlay[local]
     pragma[nomagic]
     predicate callContextAffectsDispatch(DataFlowCall call, CallContext ctx) {
       exists(CallSet calls | ctx = TSpecificCall(calls, _, _) | calls.asSome().contains(call))
@@ -673,6 +706,7 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
 
       class CcCall = CallContextCall;
 
+      overlay[local]
       pragma[inline]
       predicate matchesCall(CcCall cc, DataFlowCall call) {
         cc = Input2::getSpecificCallContextCall(call, _) or
@@ -687,10 +721,13 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
 
       CcCall ccSomeCall() { result instanceof CallContextSomeCall }
 
+      overlay[local]
       predicate instanceofCc(Cc cc) { any() }
 
+      overlay[local]
       predicate instanceofCcCall(CcCall cc) { any() }
 
+      overlay[local]
       predicate instanceofCcNoCall(CcNoCall cc) { any() }
 
       /**
@@ -707,6 +744,7 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
 
       /** Holds if `call` does not have a reduced set of dispatch targets in call context `ctx`. */
       bindingset[call, ctx]
+      overlay[local]
       predicate viableImplNotCallContextReduced(DataFlowCall call, CallContext ctx) {
         not Input2::callContextAffectsDispatch(call, ctx)
       }
@@ -744,6 +782,7 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
        * Holds if a return does not have a reduced set of viable call sites to
        * return to in call context `ctx`.
        */
+      overlay[local]
       predicate viableImplNotCallContextReducedReverse(CallContextNoCall ctx) {
         ctx instanceof CallContextAny
       }
@@ -752,6 +791,7 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
        * Resolves a return from `callable` in `cc` to `call`.
        */
       bindingset[cc, callable]
+      overlay[local]
       predicate resolveReturn(CallContextNoCall cc, DataFlowCallable callable, DataFlowCall call) {
         cc instanceof CallContextAny and relevantCallEdgeOut(call, callable)
         or
@@ -778,6 +818,7 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
        * Holds if the call context `call` either improves virtual dispatch in
        * `callable` or if it allows us to prune unreachable nodes in `callable`.
        */
+      overlay[local]
       predicate recordDataFlowCallSite(DataFlowCall call, DataFlowCallable c) {
         Input2::recordDataFlowCallSiteUnreachable(call, c) or
         recordDataFlowCallSiteDispatch(call, c)
@@ -869,6 +910,7 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
     /** Gets the corresponding Node if this is a normal node or its post-implicit read node. */
     Node asNodeOrImplicitRead() { this = TNodeNormal(result) or this = TNodeImplicitRead(result) }
 
+    overlay[local]
     predicate isImplicitReadNode(Node n) { this = TNodeImplicitRead(n) }
 
     ParameterNode asParamReturnNode() { this = TParamReturnNode(result, _) }
@@ -919,6 +961,7 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
 
     ArgNodeEx() { this.asNode().(ArgNode).argumentOf(call_, pos_) }
 
+    overlay[local]
     predicate argumentOf(DataFlowCall call, ArgumentPosition pos) {
       call = call_ and
       pos = pos_
@@ -933,6 +976,7 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
 
     ParamNodeEx() { this.asNode().(ParamNode).isParameterOf(c_, pos_) }
 
+    overlay[local]
     predicate isParameterOf(DataFlowCallable c, ParameterPosition pos) { c = c_ and pos = pos_ }
 
     ParameterPosition getPosition() { result = pos_ }
@@ -971,6 +1015,7 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
      * force a stage-dependency on the `DataFlowImplCommon.qll` stage and thereby
      * collapsing the two stages.
      */
+    overlay[local]
     cached
     predicate forceCachingInSameStage() { any() }
 
@@ -979,48 +1024,60 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
       result = getSecondLevelScope0(n.asNode())
     }
 
+    overlay[local]
     cached
     predicate nodeEnclosingCallable(Node n, DataFlowCallable c) { c = nodeGetEnclosingCallable(n) }
 
+    overlay[local]
     cached
     predicate callEnclosingCallable(DataFlowCall call, DataFlowCallable c) {
       c = call.getEnclosingCallable()
     }
 
+    overlay[local]
     cached
     predicate nodeDataFlowType(Node n, DataFlowType t) { t = getNodeType(n) }
 
+    overlay[local]
     cached
     predicate compatibleTypesCached(DataFlowType t1, DataFlowType t2) { compatibleTypes(t1, t2) }
 
     private predicate relevantType(DataFlowType t) { t = getNodeType(_) }
 
+    overlay[local]
     cached
     predicate isTopType(DataFlowType t) {
       strictcount(DataFlowType t0 | relevantType(t0)) =
         strictcount(DataFlowType t0 | relevantType(t0) and compatibleTypesCached(t, t0))
     }
 
+    overlay[local]
     cached
     predicate typeStrongerThanCached(DataFlowType t1, DataFlowType t2) { typeStrongerThan(t1, t2) }
 
+    overlay[local]
     cached
     predicate jumpStepCached(Node node1, Node node2) { jumpStep(node1, node2) }
 
+    overlay[local]
     cached
     predicate clearsContentSet(NodeEx n, ContentSet c) { clearsContent(n.asNode(), c) }
 
+    overlay[local]
     cached
     predicate expectsContentCached(Node n, ContentSet c) { expectsContent(n, c) }
 
+    overlay[local]
     cached
     predicate expectsContentSet(NodeEx n, ContentSet c) { expectsContent(n.asNode(), c) }
 
+    overlay[local]
     cached
     predicate isUnreachableInCallCached(NodeRegion nr, DataFlowCall call) {
       isUnreachableInCall(nr, call)
     }
 
+    overlay[local]
     cached
     predicate outNodeExt(Node n) {
       n instanceof OutNode
@@ -1028,6 +1085,7 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
       n.(PostUpdateNode).getPreUpdateNode() instanceof ArgNode
     }
 
+    overlay[local]
     cached
     predicate hiddenNode(NodeEx n) {
       nodeIsHidden([n.asNode(), n.asParamReturnNode()])
@@ -1052,6 +1110,7 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
       )
     }
 
+    overlay[local]
     cached
     predicate flowCheckNode(NodeEx n) {
       n.asNode() instanceof CastNode or
@@ -1060,17 +1119,20 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
       neverSkipInPathGraph(n.asNode())
     }
 
+    overlay[local]
     cached
     predicate castingNodeEx(NodeEx n) {
       n.asNode() instanceof CastingNode or
       exists(n.asParamReturnNode())
     }
 
+    overlay[local]
     cached
     predicate parameterNode(Node p, DataFlowCallable c, ParameterPosition pos) {
       isParameterNode(p, c, pos)
     }
 
+    overlay[local]
     cached
     predicate argumentNode(Node n, DataFlowCall call, ArgumentPosition pos) {
       isArgumentNode(n, call, pos)
@@ -1097,6 +1159,7 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
      * Holds if the set of viable implementations that can be called by `call`
      * might be improved by knowing the call context.
      */
+    overlay[local]
     cached
     predicate mayBenefitFromCallContextExt(DataFlowCall call, DataFlowCallable callable) {
       (
@@ -1133,10 +1196,12 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
     cached
     module CachedCallContextSensitivity {
       private module CallContextSensitivityInput implements CallContextSensitivityInputSig {
+        overlay[local]
         predicate relevantCallEdgeIn(DataFlowCall call, DataFlowCallable c) {
           c = viableCallableExt(call)
         }
 
+        overlay[local]
         predicate relevantCallEdgeOut(DataFlowCall call, DataFlowCallable c) {
           c = viableCallableExt(call)
         }
@@ -1144,6 +1209,7 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
 
       private module Impl1 = CallContextSensitivity<CallContextSensitivityInput>;
 
+      overlay[local]
       cached
       predicate reducedViableImplInCallContext(
         DataFlowCall call, DataFlowCallable c, DataFlowCall ctx
@@ -1151,11 +1217,13 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
         Impl1::reducedViableImplInCallContext(call, c, ctx)
       }
 
+      overlay[local]
       cached
       predicate recordDataFlowCallSiteUnreachable(DataFlowCall call, DataFlowCallable c) {
         Impl1::recordDataFlowCallSiteUnreachable(call, c)
       }
 
+      overlay[local]
       cached
       predicate reducedViableImplInReturn(DataFlowCallable c, DataFlowCall call) {
         Impl1::reducedViableImplInReturn(c, call)
@@ -1166,6 +1234,7 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
         result = Impl1::getSpecificCallContextCall(call, c)
       }
 
+      overlay[local]
       cached
       predicate callContextAffectsDispatch(DataFlowCall call, Cc ctx) {
         Impl1::callContextAffectsDispatch(call, ctx)
@@ -1197,12 +1266,15 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
 
       import Impl2
 
+      overlay[local]
       cached
       predicate instanceofCc(Cc cc) { any() }
 
+      overlay[local]
       cached
       predicate instanceofCcCall(CcCall cc) { any() }
 
+      overlay[local]
       cached
       predicate instanceofCcNoCall(CcNoCall cc) { any() }
 
@@ -1230,6 +1302,7 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
      * Holds if `arg` is a possible argument to `p` in `call`, taking virtual
      * dispatch into account.
      */
+    overlay[local]
     cached
     predicate viableParamArg(DataFlowCall call, ParamNode p, ArgNode arg) {
       exists(ParameterPosition ppos |
@@ -1244,6 +1317,7 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
      * Holds if `arg` is a possible argument to `p` in `call`, taking virtual
      * dispatch into account.
      */
+    overlay[local]
     cached
     predicate viableParamArgEx(DataFlowCall call, ParamNodeEx p, ArgNodeEx arg) {
       viableParamArg(call, p.asNode(), arg.asNode())
@@ -1259,6 +1333,7 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
      * Holds if a value at return position `pos` can be returned to `out` via `call`,
      * taking virtual dispatch into account.
      */
+    overlay[local]
     cached
     predicate viableReturnPosOut(DataFlowCall call, ReturnPosition pos, OutNodeExt out) {
       exists(ReturnKindExt kind |
@@ -1271,6 +1346,7 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
      * Holds if a value at return position `pos` can be returned to `out` via `call`,
      * taking virtual dispatch into account.
      */
+    overlay[local]
     cached
     predicate viableReturnPosOutEx(DataFlowCall call, ReturnPosition pos, OutNodeEx out) {
       viableReturnPosOut(call, pos, out.asNode())
@@ -1331,6 +1407,7 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
           parameterValueFlowCand(p, arg, read)
         }
 
+        overlay[local]
         pragma[nomagic]
         predicate parameterValueFlowsToPreUpdateCand(ParamNode p, PostUpdateNode n) {
           parameterValueFlowCand(p, n.getPreUpdateNode(), false)
@@ -1344,6 +1421,7 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
          * `read` indicates whether it is contents of `p` that can flow to the return
          * node.
          */
+        overlay[local]
         predicate parameterValueFlowReturnCand(ParamNode p, ReturnKind kind, boolean read) {
           exists(ReturnNode ret |
             parameterValueFlowCand(p, ret, read) and
@@ -1366,6 +1444,7 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
          *
          * `read` indicates whether it is contents of `arg` that can flow to `out`.
          */
+        overlay[local]
         predicate argumentValueFlowsThroughCand(ArgNode arg, Node out, boolean read) {
           exists(DataFlowCall call, ReturnKind kind |
             argumentValueFlowsThroughCand0(call, arg, kind, read) and
@@ -1373,6 +1452,7 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
           )
         }
 
+        overlay[local]
         predicate cand(ParamNode p, Node n) {
           parameterValueFlowCand(p, n, _) and
           (
@@ -1401,6 +1481,7 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
          * If a read step was taken, then `read` captures the `Content`, the
          * container type, and the content type.
          */
+        overlay[local]
         predicate parameterValueFlow(
           ParamNode p, Node node, ReadStepTypesOption read, string model,
           CachedCallContextSensitivity::CcNoCall ctx
@@ -1556,6 +1637,7 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
          * If a read step was taken, then `read` captures the `Content`, the
          * container type, and the content type.
          */
+        overlay[local]
         cached
         predicate argumentValueFlowsThrough(
           ArgNode arg, ReadStepTypesOption read, Node out, string model
@@ -1570,6 +1652,7 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
          *
          * This predicate is exposed for testing only.
          */
+        overlay[local]
         predicate getterStep(ArgNode arg, ContentSet c, Node out) {
           argumentValueFlowsThrough(arg, TReadStepTypesSome(_, c, _), out, _)
         }
@@ -1606,14 +1689,17 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
       parameterValueFlow(p, n.getPreUpdateNode(), TReadStepTypesNone(), _, _)
     }
 
+    overlay[local]
     cached
     predicate readSet(Node node1, ContentSet c, Node node2) { readStep(node1, c, node2) }
 
+    overlay[local]
     cached
     predicate readEx(NodeEx node1, ContentSet c, NodeEx node2) {
       readSet(pragma[only_bind_into](node1.asNode()), c, pragma[only_bind_into](node2.asNode()))
     }
 
+    overlay[local]
     cached
     predicate storeSet(
       Node node1, ContentSet c, Node node2, DataFlowType contentType, DataFlowType containerType
@@ -1641,6 +1727,7 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
      * This includes reverse steps through reads when the result of the read has
      * been stored into, in order to handle cases like `x.f1.f2 = y`.
      */
+    overlay[local]
     cached
     predicate storeEx(
       NodeEx node1, Content c, NodeEx node2, DataFlowType contentType, DataFlowType containerType
@@ -1677,15 +1764,18 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
       )
     }
 
+    overlay[local]
     cached
     predicate simpleLocalFlowStepExt(Node node1, Node node2, string model) {
       simpleLocalFlowStep(node1, node2, model) or
       reverseStepThroughInputOutputAlias(node1, node2, model)
     }
 
+    overlay[local]
     cached
     predicate allowParameterReturnInSelfEx(ParamNodeEx p) { allowParameterReturnInSelf(p.asNode()) }
 
+    overlay[local]
     cached
     predicate paramMustFlow(ParamNode p, ArgNode arg) { localMustFlowStep+(p, arg) }
 
@@ -1713,6 +1803,7 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
       cached
       string toString() { result = "Unreachable" }
 
+      overlay[local]
       cached
       predicate contains(NodeEx n) {
         exists(NodeRegion nr | super.contains(nr) and nr.contains(n.asNode()))
@@ -1826,6 +1917,7 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
     /**
      * Holds if data can flow in one local step from `node1` to `node2`.
      */
+    overlay[local]
     cached
     predicate localFlowStepExImpl(NodeEx node1, NodeEx node2, string model) {
       exists(Node n1, Node n2 |
@@ -2161,6 +2253,7 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
       )
     }
 
+    overlay[local]
     predicate typeFlowStats(int nodes, int tuples) {
       nodes =
         count(Node n |
@@ -2206,6 +2299,7 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
      * Holds if the edge `call`-to-`c` is valid in the in-going direction in the
      * call context `cc`.
      */
+    overlay[local]
     pragma[nomagic]
     predicate typeFlowValidEdgeIn(DataFlowCall call, DataFlowCallable c, boolean cc) {
       Input::relevantCallEdgeIn(call, c) and
@@ -2249,6 +2343,7 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
     /**
      * Holds if the edge `call`-to-`c` is valid in the out-going direction.
      */
+    overlay[local]
     pragma[nomagic]
     predicate typeFlowValidEdgeOut(DataFlowCall call, DataFlowCallable c) {
       Input::relevantCallEdgeOut(call, c) and
@@ -2294,6 +2389,7 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
     }
 
   private class ReadStepTypesOption extends TReadStepTypesOption {
+    overlay[local]
     predicate isSome() { this instanceof TReadStepTypesSome }
 
     DataFlowType getContainerType() { this = TReadStepTypesSome(result, _, _) }
@@ -2333,6 +2429,7 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
     }
 
     /** Holds if this call context makes `n` unreachable. */
+    overlay[local]
     predicate unreachable(NodeEx n) { ns.contains(n) }
   }
 
@@ -2351,6 +2448,7 @@ module MakeImplCommon<LocationSig Location, InputSig<Location> Lang> {
      * Holds if this node is the parameter of callable `c` at the specified
      * position.
      */
+    overlay[local]
     predicate isParameterOf(DataFlowCallable c, ParameterPosition pos) {
       parameterNode(this, c, pos)
     }
