@@ -81,3 +81,9 @@ private predicate discardReferableLocatable(@locatable el) {
     not drl.existsInOverlay()
   )
 }
+
+overlay[local]
+private predicate baseConfigLocatable(@configLocatable l) { not isOverlay() }
+
+overlay[discard_entity]
+private predicate discardBaseConfigLocatable(@configLocatable el) { baseConfigLocatable(el) }
