@@ -368,6 +368,7 @@ module MakeImplStage1<LocationSig Location, InputSig<Location> Lang> {
     /**
      * Holds if data can flow in one local step from `node1` to `node2`.
      */
+    overlay[global]
     private predicate localFlowStepEx(NodeEx node1, NodeEx node2, string model) {
       localFlowStepExImpl(node1, node2, model) and
       stepFilter(node1, node2)
