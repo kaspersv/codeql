@@ -676,6 +676,7 @@ module Make<RegexTreeViewSig TreeImpl> {
   /**
    * Holds if the NFA has a transition from `q1` to `q2` labelled with `lbl`.
    */
+  pragma[no_dynamic_join_order]
   predicate delta(State q1, EdgeLabel lbl, State q2) {
     exists(RegexpCharacterConstant s, int i |
       q1 = Match(s, i) and

@@ -20,6 +20,7 @@ predicate isCookieWithSensitiveName(Expr cookieExpr) {
  * Configuration for tracking if a sensitive string literal or a variable with a sensitive name is used as an argument.
  */
 private module AuthCookieNameConfig implements DataFlow::ConfigSig {
+  pragma[no_dynamic_join_order]
   private predicate isAuthVariable(Expr expr) {
     exists(string val |
       (

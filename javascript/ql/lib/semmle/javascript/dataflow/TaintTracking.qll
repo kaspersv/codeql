@@ -926,6 +926,7 @@ module TaintTracking {
     Expr x;
     override EqualityTest astNode;
 
+    pragma[extended_statistics]
     UndefinedCheckSanitizer() {
       exists(IndexExpr idx, DataFlow::AnalyzedNode undef |
         astNode.hasOperands(idx, undef.asExpr())

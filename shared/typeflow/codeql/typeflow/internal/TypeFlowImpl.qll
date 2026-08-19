@@ -269,6 +269,7 @@ module TypeFlow<LocationSig Location, TypeFlowInput<Location> I> {
    * Holds if `t` is an irrelevant part of the union type bound for `n` due to
    * being contained in another part of the union type bound.
    */
+  pragma[no_dynamic_join_order]
   private predicate irrelevantUnionTypePart(TypeFlowNode n, Type t, boolean exact) {
     unionTypeFlow(n, t, exact) and
     not irrelevantUnionType(n) and

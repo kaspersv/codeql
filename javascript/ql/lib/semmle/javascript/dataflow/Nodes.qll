@@ -1243,6 +1243,7 @@ class ClassNode extends DataFlow::ValueNode, DataFlow::SourceNode {
   }
 
   pragma[noinline]
+  pragma[extended_statistics]
   private DataFlow::SourceNode getAnInstanceReferenceAux(DataFlow::TypeTracker t) {
     exists(DataFlow::TypeTracker t2 | result = this.getAnInstanceReference(t2).track(t2, t))
   }
@@ -1739,6 +1740,7 @@ class RegExpCreationNode extends DataFlow::SourceNode {
 
   /** Gets a data flow node referring to this regular expression. */
   overlay[global]
+  pragma[extended_statistics]
   private DataFlow::SourceNode getAReference(DataFlow::TypeTracker t) {
     t.start() and
     result = this
@@ -1748,6 +1750,7 @@ class RegExpCreationNode extends DataFlow::SourceNode {
 
   /** Gets a data flow node referring to this regular expression. */
   overlay[global]
+  pragma[extended_statistics]
   cached
   DataFlow::SourceNode getAReference() {
     Stages::FlowSteps::ref() and

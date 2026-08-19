@@ -36,6 +36,7 @@ class Attributable extends @attributable {
   }
 }
 
+pragma[no_dynamic_join_order]
 private string getAttributeName(Attribute a) {
   exists(string type, string pattern |
     type = a.getType().getName() and pattern = "(.*)Attribute(<.*>)?"

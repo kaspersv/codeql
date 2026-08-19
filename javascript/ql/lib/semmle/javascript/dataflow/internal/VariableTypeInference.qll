@@ -95,6 +95,7 @@ class AnalyzedVarDef extends VarDef {
    * Gets an abstract value that the right hand side of this `VarDef`
    * may evaluate to.
    */
+  pragma[extended_statistics]
   AbstractValue getAnRhsValue() {
     result = this.getRhs().getALocalValue()
     or

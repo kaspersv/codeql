@@ -92,6 +92,7 @@ abstract class StructurallyCompared extends AstNode {
    * rooted at node `that`, where `that` structurally corresponds to `this` as
    * determined by `candidateInternal`.
    */
+  pragma[extended_statistics]
   private predicate sameInternal(AstNode that) {
     that = this.candidateInternal() and
     /*

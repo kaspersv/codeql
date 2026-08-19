@@ -386,6 +386,7 @@ class Overridable extends Declaration, TOverridable {
    * - If this member is `D.M` then `I.M = getAnUltimateImplementee()`.
    */
   pragma[nomagic]
+  pragma[no_dynamic_join_order]
   Overridable getAnUltimateImplementee() {
     exists(Overridable implementation, ValueOrRefType implementationType |
       implements(implementation, result, implementationType)

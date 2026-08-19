@@ -1209,6 +1209,7 @@ module Make<
      * allows us to infer taint flow from argument 0 to the return value.
      */
     pragma[nomagic]
+    pragma[no_dynamic_join_order]
     private predicate derivedFluentFlow(
       SummarizedCallable c, SummaryComponentStack input, SummaryComponentStack arg,
       SummaryComponentStack return, boolean preservesValue, string model
