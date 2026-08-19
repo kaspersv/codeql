@@ -289,6 +289,7 @@ module RangeAnalysis {
   /**
    * Holds if the given container has a comment or identifier mentioning `NaN`.
    */
+  pragma[extended_statistics]
   predicate hasNaNIndicator(StmtContainer container) {
     exists(Comment comment |
       comment.getText().regexpMatch("(?s).*N[aA]N.*") and

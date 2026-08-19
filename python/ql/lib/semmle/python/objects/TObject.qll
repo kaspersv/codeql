@@ -278,6 +278,7 @@ predicate super_instantiation(
 }
 
 pragma[noinline]
+pragma[extended_statistics]
 private predicate super_2args(
   CallNode instantiation, ObjectInternal self, ClassObjectInternal startclass,
   PointsToContext context

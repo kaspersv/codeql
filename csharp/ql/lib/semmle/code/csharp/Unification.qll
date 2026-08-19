@@ -350,6 +350,7 @@ module Gvn {
    */
   pragma[no_dynamic_join_order]
   pragma[nomagic]
+  pragma[extended_statistics]
   private predicate unifiableTypeArguments(
     CompoundTypeKind k, GvnTypeArgument arg1, GvnTypeArgument arg2, int i, boolean subsumes
   ) {
@@ -423,6 +424,7 @@ module Gvn {
    * `t1` and `t2` are unifiable, and both `t1` and `t2` are of kind `k`.
    */
   pragma[nomagic]
+  pragma[no_dynamic_join_order]
   private predicate unifiableMultiple(
     CompoundTypeKind k, ConstructedGvnType t1, ConstructedGvnType t2, int i, boolean subsumes
   ) {

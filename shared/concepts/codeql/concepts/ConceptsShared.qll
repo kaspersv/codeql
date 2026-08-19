@@ -129,6 +129,7 @@ module ConceptsMake<LocationSig Location, DF::InputSig<Location> DataFlowLang> {
            * Depending on the framework, a request may have multiple nodes which contribute to the URL.
            */
           pragma[no_dynamic_join_order]
+          pragma[extended_statistics]
           abstract DataFlowNode getAUrlPart();
 
           /** Gets a string that identifies the framework used for this request. */

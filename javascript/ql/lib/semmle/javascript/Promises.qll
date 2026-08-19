@@ -354,6 +354,7 @@ module PromiseFlow {
    * Holds if there is a step for storing a `value` into a promise `obj`.
    * `prop` is either `valueProp()` if the value is a resolved value, or `errorProp()` if the promise has been rejected.
    */
+  pragma[no_dynamic_join_order]
   predicate storeStep(DataFlow::Node value, DataFlow::SourceNode obj, string prop) {
     // promise definition, e.g. `new Promise()`
     exists(PromiseDefinition promise | obj = promise |

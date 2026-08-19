@@ -79,6 +79,7 @@ private Location getFirstSourceLocation(Element e) {
 cached
 private module Cached {
   cached
+  pragma[no_dynamic_join_order]
   Location bestLocation(Element e) {
     (
       if e.(Modifiable).isPartial() or e instanceof Namespace

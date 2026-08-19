@@ -821,6 +821,7 @@ private predicate isRelatableMemoryLocation(VariableMemoryLocation vml) {
 }
 
 pragma[no_dynamic_join_order]
+pragma[extended_statistics]
 private predicate isCoveredOffset(Allocation var, int offsetRank, VariableMemoryLocation vml) {
   exists(int startRank, int endRank, VirtualVariable vvar |
     vml.getStartBitOffset() = rank[startRank](IntValue offset_ | isRelevantOffset(vvar, offset_)) and

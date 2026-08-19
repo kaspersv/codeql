@@ -210,6 +210,7 @@ class VarDef extends ControlFlowNode {
    * Holds if this definition of `v` is overwritten by another definition, that is,
    * another definition of `v` is reachable from it in the CFG.
    */
+  pragma[extended_statistics]
   predicate isOverwritten(Variable v) {
     exists(BasicBlock bb, int i | bb.defAt(i, v, this) |
       exists(int j | bb.defAt(j, v, _) and j > i)

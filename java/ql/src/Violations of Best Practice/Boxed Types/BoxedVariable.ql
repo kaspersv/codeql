@@ -49,6 +49,7 @@ int callableGetNumberOfParameters(Callable c) { result = c.getNumberOfParameters
  * overload resolution. If this is the case then the boxing is most likely intentional and
  * it should not be reported as a violation.
  */
+pragma[no_dynamic_join_order]
 predicate affectsOverload(LocalBoxedVar v) {
   exists(Call call, int i, Callable c1, Callable c2 |
     call.getCallee() = c1 and
