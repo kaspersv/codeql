@@ -365,12 +365,7 @@ module BoostorgAsio {
    * Signature for flows of protocol values to the first argument of a context
    * constructor.
    */
-  signature module SslContextCallConfigSig {
-    /**
-     * Holds if `source` is a relevant data flow source.
-     */
-    predicate isSource(DataFlow::Node source);
-
+  signature module SslContextCallConfigSig extends DataFlow::ConfigSig {
     /**
      * Holds if `sink` is a relevant data flow sink.
      */
@@ -387,11 +382,7 @@ module BoostorgAsio {
    * of a context constructor.
    */
   module SslContextCallGlobal<SslContextCallConfigSig Config> {
-    private module C implements DataFlow::ConfigSig {
-      import Config
-    }
-
-    import DataFlow::Global<C>
+    import DataFlow::Global<Config>
   }
 
   /**
