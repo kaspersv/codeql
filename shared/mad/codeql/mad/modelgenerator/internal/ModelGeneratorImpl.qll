@@ -18,7 +18,9 @@ private import codeql.util.Unit
 /**
  * Provides language-specific model generator parameters.
  */
-signature module ModelGeneratorCommonInputSig<LocationSig Location, InputSig<Location> Lang> {
+signature module ModelGeneratorCommonInputSig<LocationSig Location, InputSig<Location> Lang> extends
+  ModelPrintingLangSig
+{
   /**
    * A Type.
    */
@@ -130,16 +132,6 @@ signature module ModelGeneratorCommonInputSig<LocationSig Location, InputSig<Loc
    * For most languages this will be the string "ReturnValue".
    */
   default string getReturnValueString(Lang::ReturnKind kind) { result = "ReturnValue" }
-
-  /**
-   * Gets the string representation for the `i`th column in the MaD row for `api`.
-   */
-  string partialModelRow(Callable api, int i);
-
-  /**
-   * Gets the string representation for the `i`th column in the neutral MaD row for `api`.
-   */
-  string partialNeutralModelRow(Callable api, int i);
 }
 
 /**
@@ -157,16 +149,7 @@ module MakeModelGeneratorFactory<
 
   private import ModelGeneratorInput
   private import Tt::TaintFlowMake<Location, Lang, TaintLang> as TaintTracking
-
-  private module ModelPrintingLang implements ModelPrintingLangSig {
-    class Callable = ModelGeneratorInput::Callable;
-
-    predicate partialModelRow = ModelGeneratorInput::partialModelRow/2;
-
-    predicate partialNeutralModelRow = ModelGeneratorInput::partialNeutralModelRow/2;
-  }
-
-  private import ModelPrintingImpl<ModelPrintingLang> as Printing
+  private import ModelPrintingImpl<ModelGeneratorInput> as Printing
 
   final private class NodeExtendedFinal = NodeExtended;
 
