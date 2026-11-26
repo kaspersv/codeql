@@ -566,6 +566,7 @@ module MakeWithSplitting<
    * The predicates in this module are named after the cases above.
    */
   private module SuccSplits {
+    pragma[no_dynamic_join_order]
     private predicate succInvariant1(
       Reachability::SameSplitsBlock b, AstNode pred, Splits predSplits, AstNode succ, Completion c
     ) {

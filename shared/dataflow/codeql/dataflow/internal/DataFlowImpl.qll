@@ -1019,6 +1019,7 @@ module MakeImpl<LocationSig Location, InputSig<Location> Lang> {
 
         private module FwdFlowInNoThrough = FwdFlowIn<bottom/0>;
 
+        pragma[no_dynamic_join_order]
         pragma[nomagic]
         private predicate fwdFlowInNoFlowThrough(
           ParamNd p, CcCall innercc, SummaryCtx innerSummaryCtx, Typ t, Ap ap, TypOption stored
