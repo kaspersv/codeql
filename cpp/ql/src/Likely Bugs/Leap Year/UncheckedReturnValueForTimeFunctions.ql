@@ -44,6 +44,7 @@ class SafeTimeGatheringFunction extends Function {
   }
 }
 
+pragma[no_dynamic_join_order]
 from FunctionCall fcall, TimeConversionFunction trf, Variable var
 where
   not trf.isAutoLeapYearCorrecting() and
