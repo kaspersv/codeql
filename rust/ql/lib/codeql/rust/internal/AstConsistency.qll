@@ -36,6 +36,7 @@ query predicate multipleLocations(Locatable e) { strictcount(e.getLocation()) > 
  */
 query predicate noLocation(Locatable e) { not exists(e.getLocation()) }
 
+pragma[no_dynamic_join_order]
 private predicate multiplePrimaryQlClasses(Element e) {
   strictcount(string cls | cls = e.getAPrimaryQlClass() and cls != "VariableAccess") > 1
 }
