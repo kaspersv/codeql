@@ -21,6 +21,7 @@ import java
 class ReservedUnicodeInLiteral extends Literal {
   private int indexStart;
 
+  pragma[no_dynamic_join_order]
   ReservedUnicodeInLiteral() {
     not this instanceof CharacterLiteral and
     this.getCompilationUnit().fromSource() and
