@@ -37,6 +37,7 @@ class ObjectInternal extends TObject {
    *  * A bound method would be "introduced" when relevant attribute on an instance
    * is accessed. In `x = X(); x.m` `x.m` introduces the bound method.
    */
+  pragma[no_dynamic_join_order]
   abstract predicate introducedAt(ControlFlowNode node, PointsToContext context);
 
   /** Gets the class declaration for this object, if it is a class with a declaration. */
